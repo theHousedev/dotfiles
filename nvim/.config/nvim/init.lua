@@ -16,6 +16,7 @@ require 'lazy-plugins'
 vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
 vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
 vim.api.nvim_set_hl(0, 'FloatBorder', { bg = 'none' })
+vim.api.nvim_set_hl(0, 'Visual', { bg = 'none' })
 
 vim.api.nvim_create_user_command('Init', 'e ~/.config/nvim/init.lua', { bang = true, desc = 'Open init.lua' })
 vim.api.nvim_create_user_command('Config', 'e ~/.config/nvim/', { bang = true, desc = 'Open Neovim config dir' })
