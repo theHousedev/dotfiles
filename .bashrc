@@ -2,11 +2,25 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
+# baseline PATH if core tools not found
+if ! command -v ls >/dev/null 2>&1; then
+  export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
+fi
+
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
       *) return;;
 esac
+
+custom_path_add() {
+    local new_path="$1"
+    if [[ ":$PATH:" != *":$new_path:"* ]]; then
+        export PATH="$PATH:$new_path"
+    fi
+}
+
+custom_path_add "$HOME/.scripts"
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
@@ -56,14 +70,6 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
-if [ "$color_prompt" = yes ]; then
-    # PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-    PS1='${debian_chroot:+($debian_chroot)}\[\e[32;1m\][\u\[\e[22m\]:\[\e[34m\]\W\[\e[32;1m\]]\[\e[0m\]\$ '
-else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-fi
-unset color_prompt force_color_prompt
-
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
 xterm*|rxvt*)
@@ -79,7 +85,6 @@ if [ -x /usr/bin/dircolors ]; then
     #alias ls='ls --color=auto'
     alias dir='dir --color=auto'
     alias vdir='vdir --color=auto'
-
     alias grep='grep --color=auto'
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
@@ -100,27 +105,19 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# fnm
-FNM_PATH="/home/kh/.local/share/fnm"
+FNM_PATH="$HOME/.local/share/fnm"
 if [ -d "$FNM_PATH" ]; then
   export PATH="$FNM_PATH:$PATH"
-  eval "`fnm env`"
+  if command -v fnm >/dev/null 2>&1; then
+    eval "$(fnm env --shell bash)"   # force bash so it doesn’t “infer”
+  fi
 fi
+
 . "$HOME/.cargo/env"
 
 # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
 
-if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\e[32;1m\][\u\[\e[22m\]:\[\e[34m\]\W\[\e[32;1m\]]\[\e[0m\]\$ '
-else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-fi
-unset color_prompt force_color_prompt
-
-
-
-# custom 'git add .' and 'git commit -m *' combination 
 gac() {
     args=("$@")
     message="${args[-1]}"
@@ -212,7 +209,8 @@ function set_prompt() {
         PS1="${body}\n${pSymbol}"
     fi
 }
-
 PROMPT_COMMAND=set_prompt
-ZIGVM_HOME="/home/kh/.config/zigvm"
-export PATH="$PATH:$ZIGVM_HOME/current"
+
+custom_path_add "$HOME/.config/zigvm/current"
+custom_path_add "$HOME/go/bin"
+custom_path_add "/usr/local/go/bin"
