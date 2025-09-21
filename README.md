@@ -1,14 +1,16 @@
-# Personal Config Repo
+# Config collection using **GNU Stow**
+If there's a utility, shell script, or user-scoped custom config file you don't want to rebuild for every new work environment, then `stow` is the tool you're after. This is how I manage a 1:1 config setup across multiple machines.
 
-This is how I manage a 1:1 config setup across multiple machines. If there's a utility, shell script, or user-scoped custom config file you don't want to rebuild for every new work environment, then `stow` is the tool you're after.
+Why? If you end up programming on different devices, changing one configuration in one spot means you'll have to go to every other device and make identical changes to them, too. This makes that process simpler because you can just pull your stow repo and the changes will be synced.
 
-Feel free[^1] to out [GNU stow](https://www.gnu.org/software/stow/) for yourself, and don't forget to read [the docs](https://www.gnu.org/software/stow/manual/stow.html#Introduction).
-
-[^1]: FOSS forever*
+Feel *free*[^1] to try out [GNU stow](https://www.gnu.org/software/stow/) for yourself.
 
 ### Installation:
+Update your package manager if needed, then:
 - `sudo apt install stow`
-- `pacman -S stow` (Arch btw)
+- `pacman -S stow`[^2]
+
+There are other install options I don't use. [Read the docs](https://www.gnu.org/software/stow/manual/stow.html#Introduction) to learn more.
 
 ### Setup:
 1) Create a dedicated config dir in your home (mine is `~/.dotfiles/`)
@@ -17,8 +19,8 @@ Feel free[^1] to out [GNU stow](https://www.gnu.org/software/stow/) for yourself
         - `~/.dotfiles/nvim/`
         - `~/.dotfiles/bash/`
         - etc.
-3) `cd ~/.dotfiles/` (or whatever you named it)
-4) `stow .` to set up all symlinks to the new locations
+3) `cd ~/.dotfiles/` *(or whatever you named it)*
+4) `stow .` to set up the symlinks
 
 
 
@@ -26,15 +28,15 @@ That's it, pretty hassle free. When you make any config changes, commit and push
 
 > [!WARNING]
 > If you want to copy these configs, you'll need access to:
-> - `bash`
-> - `nvim`
-> - `tmux`
-> - `lsd`
-> - `pydf`
+> > `bash`  
+> > `nvim`
+> > `tmux`  
+> > `lsd`  
+> > `pydf`  
 > 
-> In addition, many of my configs are hardcoded specific to my username, so this may break usability of certain features. I encourage you to just build your own configs and stow them yourself!
+> In addition, some things may be hardcoded specific to me, so this may break your usability of certain features. I encourage you to just build your own configs and stow them yourself!
 >
-> (But feel free to take anything interesting you find here.)
+> But feel free to use anything interesting you find here.
 
 # Config Details
 I am mostly after tools that improve my (hobbyist, to be clear) workflow in a way that I feel is sensible. This includes a very [kickstart](https://github.com/nvim-lua/kickstart.nvim)-inspired modular Neovim config with some tweaks, a bit of a bash prompt overhaul with aliases, and my own `git` and `tmux` configs to keep things consistent.
@@ -54,14 +56,14 @@ If I move into a `git` repo, the branch name will be displayed and color-coded b
 Notice after committing that "main" turns blue like my username and pwd. There isn't much more to my prompt besides that `prompt` command to toggle the special characters, and a venv flag if needed.
 
 ## Aliases
-I embrace a few common aliases, like:
+I use a few common aliases, like:
 > `..` → `cd ..`  
 `...` → `cd ../..`  
 `..l` → `cd .. && ls`  
 `f` → `find . | grep`  
 `h` → `history . | grep`
 
-Some git shortcuts:
+And also a few git shortcuts:
 > `gp` → `git push`  
 `gs` → `git status`  
 `pg` → `git pull origin`  
@@ -69,7 +71,20 @@ Some git shortcuts:
 `log20` → `git log -20 --oneline --graph`  
 `log40` → `git log -40 --oneline --graph`
 
-And the following add/commit function:
+...which includes the following add/commit function:  
 > `gac` → `git add commit . -m` 
 
 Several other functions exist like `prompt`, and you'll also find specific Neovim aliases to rapidly get into either nvim or bash configs.
+ 
+## Summary
+
+Get excited about your dev environment, dive into configuring things for yourself, and know you can keep it all organized quite neatly and make it highly repeatable using `stow`.
+
+ok  
+thanks for reading this far  
+**bye**
+
+---
+
+[^1]: FOSS forever  
+[^2]: Arch btw
