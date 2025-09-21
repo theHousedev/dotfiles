@@ -29,12 +29,12 @@ That's it, pretty hassle free. When you make any config changes, commit and push
 > [!WARNING]
 > If you want to copy these configs, you'll need access to:
 > > `bash`  
-> > `nvim`
+> > `nvim`  
 > > `tmux`  
 > > `lsd`  
 > > `pydf`  
 > 
-> In addition, some things may be hardcoded specific to me, so this may break your usability of certain features. I encourage you to just build your own configs and stow them yourself!
+> Some things may be hardcoded just to my absolute paths. Be warned!
 >
 > But feel free to use anything interesting you find here.
 
