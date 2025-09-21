@@ -90,7 +90,5 @@ ok
 thanks for reading this far  
 **bye**
 
----
-
 [^1]: FOSS forever  
 [^2]: Arch btw
