@@ -46,7 +46,7 @@ The good news: It doesn't have to be limited to these items, and can be expanded
 ## Bash Prompt
 My basic bash prompt is just a multiline with coloring, and decorations that can be toggled.
 
-Format: `Date:Time.Seconds Username(:PresentWorkingDir)(:GitBranch)`
+Prompt format: `DD:HHMM.SS $USER(:pwd)(:git_branch)`
 
 ![basic prompt](readme-assets/basic-prompt.jpg)
 
@@ -71,10 +71,16 @@ And also a few git shortcuts:
 `log20` → `git log -20 --oneline --graph`  
 `log40` → `git log -40 --oneline --graph`
 
-...which includes the following add/commit function:  
-> `gac` → `git add commit . -m` 
+<br>
+...and centrally, the following add/commit function:
 
-Several other functions exist like `prompt`, and you'll also find specific Neovim aliases to rapidly get into either nvim or bash configs.
+`gac {...args} {"lastArg"}` → `git add {...args} commit -m {"lastArg"}`
+
+> [!TIP]
+> Takes any number of files/dirs before a string commit message
+
+
+Other functions exist like `prompt`, plus highly specific aliases to get into nvim or bash configs with short commands.
  
 ## Summary
 
