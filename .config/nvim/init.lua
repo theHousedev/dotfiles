@@ -28,6 +28,20 @@ vim.api.nvim_create_user_command('Plugins', 'e ~/.config/nvim/lua/lazy-plugins.l
 
 vim.api.nvim_create_user_command('Alias', 'e ~/.bash_aliases', { bang = true, desc = 'Edit bash aliases' })
 
+local restore_cursor_augroup = vim.api.nvim_create_augroup('RestoreCursorShapeOnExit', { clear = true })
+
+vim.api.nvim_create_autocmd('VimLeave', {
+  group = restore_cursor_augroup,
+  command = 'set guicursor=a:ver100',
+})
+
+vim.filetype.add {
+  pattern = {
+    ['/etc/nginx/.*'] = 'nginx',
+    ['.*nginx.*%.conf'] = 'nginx',
+  },
+}
+
 -- vim.api.nvim_create_autocmd({ 'BufEnter' }, {
 --   callback = function()
 --     print 'Loading default options...'

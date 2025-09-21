@@ -129,6 +129,44 @@ gac() {
     fi
 }
 
+nginx-edit() {
+    if [ -z "$1" ]; then
+        echo "Usage: nginx-edit <site-name>"
+        echo "Available sites:"
+        ls /etc/nginx/sites-available/ 2>/dev/null | sed 's/^/  /'
+        return 1
+    fi
+
+    local site_file="/etc/nginx/sites-available/$1"
+
+    if [ ! -f "$site_file" ]; then
+        echo "Error: $site_file does not exist"
+        echo "Available sites:"
+        ls /etc/nginx/sites-available/ 2>/dev/null | sed 's/^/  /'
+        return 1
+    fi
+
+    echo "Editing nginx config for: $1"
+    # Direct sudo nvim approach
+    sudo /usr/bin/nvim/ +'set ft=nginx' "$site_file"
+
+    # Optional: Ask if you want to test/reload nginx after editing
+    read -p "Test nginx config and reload? [y/N] " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        sudo nginx -t && sudo systemctl reload nginx
+    fi
+}
+
+_nginx_edit_completion() {
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local -a sites
+    mapfile -t sites < <(find /etc/nginx/sites-available/ -maxdepth 1 -type f -printf '%f\n' 2>/dev/null)
+    COMPREPLY=($(compgen -W "${sites[*]}" -- "$cur"))
+}
+
+complete -F _nginx_edit_completion nginx-edit
+
 PROMPT_CONFIG_FILE="$HOME/.prompt_config"
 
 load_prompt_config() {
@@ -165,16 +203,16 @@ show_prompt_config() {
 
 load_prompt_config
 alias prompt='toggle_prompt'
+source /home/kh/.git-prompt.sh
 
-source ~/.git-prompt.sh
 function set_prompt() {
     local R="\[\e[0m\]" # reset
     local RED="${R}\[\e[1;31m\]"
     local GRN="${R}\[\e[1;32m\]"
     local BLU="${R}\[\e[1;34m\]"
-    local DRED="${R}\[\e[1;2;31m\]"
+    # local DRED="${R}\[\e[1;2;31m\]"
     local DGRN="${R}\[\e[1;2;32m\]"
-    local DBLU="${R}\[\e[1;2;34m\]"
+    # local DBLU="${R}\[\e[1;2;34m\]"
 
     if [[ $PROMPT_CHARS == "special" ]]; then
         local leadSym="${GRN} 󰀝 "
@@ -184,13 +222,13 @@ function set_prompt() {
         local pSymbol="${GRN}> ${R}"
     fi
 
-    local TIME="${DGRN}$(date +%d:%H%M.%S)${R}"
+    local TIME; TIME="${DGRN}$(date +%d:%H%M.%S)${R}"
     local USR="${BLU}\u${R}"
     local SEP="${GRN}:"
     local FRONT="${TIME}${leadSym}${USR}"
 
     if [ -n "$VIRTUAL_ENV" ]; then
-        body="($(basename $VIRTUAL_ENV))${FRONT}${SEP}${BLU}\W"
+        body="($(basename "$VIRTUAL_ENV"))${FRONT}${SEP}${BLU}\W"
     elif [ "$PWD" == "$HOME" ]; then
         body="${FRONT}"
     else
@@ -214,3 +252,4 @@ PROMPT_COMMAND=set_prompt
 custom_path_add "$HOME/.config/zigvm/current"
 custom_path_add "$HOME/go/bin"
 custom_path_add "/usr/local/go/bin"
+export EDITOR=nvim
