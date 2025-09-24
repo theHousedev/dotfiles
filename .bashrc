@@ -113,7 +113,6 @@ if [ -d "$FNM_PATH" ]; then
   fi
 fi
 
-. "$HOME/.cargo/env"
 
 # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
@@ -203,7 +202,7 @@ show_prompt_config() {
 
 load_prompt_config
 alias prompt='toggle_prompt'
-source /home/kh/.git-prompt.sh
+source "$HOME"/.git-prompt.sh
 
 function set_prompt() {
     local R="\[\e[0m\]" # reset
